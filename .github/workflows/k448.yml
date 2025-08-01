@@ -24,7 +24,7 @@ jobs:
         run: |
           cd karaf
           git checkout karaf-4.4.8
-          # mvn install -DskipTests
+          mvn install -DskipTests
       - name: Core
         run: |
           gh repo clone holgerfriedrich/openhab-core
