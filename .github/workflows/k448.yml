@@ -20,4 +20,56 @@ jobs:
         run: |
           cd karaf
           git checkout karaf-4.4.8
-          mvn install -DskipChecks
+          mvn install -DskipTests
+      - name: Core
+        run: |
+          gh repo clone holgerfriedrich/openhab-core
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Core 
+        run: |
+          cd openhab-core
+          git checkout k448 
+          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T4 -DwithResolver
+      - name: Webui 
+        run: |
+          gh repo clone holgerfriedrich/openhab-webui
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Webui
+        run: |
+          cd openhab-webui
+          git checkout k448 
+          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T4 -DwithResolver
+      - name: Addons
+        run: |
+          gh repo clone holgerfriedrich/openhab-addons
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Addons
+        run: |
+          cd openhab-addons
+          git checkout k448 
+          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T4 -DwithResolver
+      - name: Distro 
+        run: |
+          gh repo clone holgerfriedrich/openhab-distro
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Distro 
+        run: |
+          cd openhab-distro
+          git checkout k448 
+          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T4 -DwithResolver
+      - name: Upload Core
+        uses: actions/upload-artifact@v4
+        with:
+          name: openhab-core
+          path: openhab-distro/distributions/openhab/target/*.zip
+          retention-days: 5
+      - name: Upload Addons
+        uses: actions/upload-artifact@v4
+        with:
+          name: openhab-addons
+          path: openhab-distro/distributions/openhab-addons/target/*.kar
+          retention-days: 5
