@@ -1,0 +1,18 @@
+name: k448 
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build-all:
+    name: Build Karaf
+    # typical duration is ~15min, set twice the amount as limit (default is 6h)
+    timeout-minutes: 30
+    steps:
+      - name: Karaf
+        run: |
+          gh repo clone apache/karaf
+          cd karaf
+          git checkout karaf-4.4.8
+          mvn install -DskipChecks
