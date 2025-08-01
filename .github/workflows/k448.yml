@@ -11,6 +11,13 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-24.04
     steps:
+      - name: Set up Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository
+            !~/.m2/repository/org/openhab
+            !~/.m2/repository/org/apache/karaf
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
