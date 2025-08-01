@@ -77,3 +77,20 @@ jobs:
           name: openhab-addons
           path: openhab-distro/distributions/openhab-addons/target/*.kar
           retention-days: 5
+      - name: Status 
+        run: |
+          cd openhab-core
+          git status
+          git diff
+          cd ..
+          cd openhab-webui
+          git status
+          git diff
+          cd ..
+          cd openhab-addons
+          git status
+          git diff
+          cd ..
+          cd openhab-distro
+          git status
+          git diff
