@@ -6,9 +6,8 @@ on:
 
 jobs:
   build-all:
-    name: Build Karaf
+    name: Build OH
     # typical duration is ~15min, set twice the amount as limit (default is 6h)
-    timeout-minutes: 30
     runs-on: ubuntu-24.04
     steps:
       - name: Set up Cache
@@ -26,6 +25,9 @@ jobs:
       - name: Karaf
         run: |
           gh repo clone apache/karaf
+          cd karaf
+          gh pr checkout 1983
+          cd ..
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Karaf
