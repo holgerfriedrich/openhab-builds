@@ -31,7 +31,7 @@ jobs:
       - name: Build Distro 
         run: |
           cd openhab-distro
-          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Upload Core
         uses: actions/upload-artifact@v4
         with:
