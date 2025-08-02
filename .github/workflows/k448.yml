@@ -37,7 +37,7 @@ jobs:
         run: |
           cd karaf
           # git checkout karaf-4.4.8
-          ./mvnw -Dmaven=4.0.0-rc-4 install -DskipTests -B -ntp
+          mvn install -DskipTests -B -ntp
       - name: Core
         run: |
           gh repo clone holgerfriedrich/openhab-core
