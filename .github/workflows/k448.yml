@@ -26,8 +26,8 @@ jobs:
         run: |
           gh repo clone apache/karaf
           cd karaf
-          gh pr checkout 1983
-          cd ..
+          git checkout d7e254181e
+          gh pr diff 1983 | git apply
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Karaf
