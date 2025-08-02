@@ -1,7 +1,9 @@
-name: k448 
+name: Build OH Current
 
 on:
   push:
+    paths:
+      - '.github/workflows/current.yml'
   workflow_dispatch:
 
 jobs:

@@ -1,7 +1,10 @@
-name: k448 
+name: Build Karaf 4.4.8 
 
 on:
   push:
+    paths:
+      - '.github/workflows/k448.yml'
+  pull_request:
   workflow_dispatch:
 
 jobs:
