@@ -44,7 +44,7 @@ jobs:
         run: |
           cd openhab-core
           git checkout k448 
-          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T4 -DwithResolver -B -ntp
+          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Webui 
         run: |
           gh repo clone holgerfriedrich/openhab-webui
@@ -54,7 +54,7 @@ jobs:
         run: |
           cd openhab-webui
           git checkout k448 
-          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T4 -DwithResolver -B -ntp
+          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Addons
         run: |
           gh repo clone holgerfriedrich/openhab-addons
@@ -64,7 +64,7 @@ jobs:
         run: |
           cd openhab-addons
           git checkout k448 
-          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T4 -DwithResolver -B -ntp
+          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Distro 
         run: |
           gh repo clone holgerfriedrich/openhab-distro
@@ -74,7 +74,7 @@ jobs:
         run: |
           cd openhab-distro
           git checkout k448 
-          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T4 -DwithResolver -B -ntp
+          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Upload Core
         uses: actions/upload-artifact@v4
         with:
