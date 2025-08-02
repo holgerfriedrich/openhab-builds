@@ -30,7 +30,6 @@ jobs:
       - name: Build Distro 
         run: |
           cd openhab-distro
-          git checkout k448 
           mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Upload Core
         uses: actions/upload-artifact@v4
