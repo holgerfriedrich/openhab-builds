@@ -9,7 +9,6 @@ on:
 jobs:
   build-all:
     name: Build OH Current
-    # typical duration is ~15min, set twice the amount as limit (default is 6h)
     runs-on: ubuntu-24.04
     steps:
       - name: Set up Cache
