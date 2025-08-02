@@ -25,7 +25,7 @@ jobs:
           java-version: '21'
       - name: Distro 
         run: |
-          gh repo clone holgerfriedrich/openhab-distro
+          gh repo clone openhab/openhab-distro
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Distro 
