@@ -1,0 +1,63 @@
+name: k448 
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build-all:
+    name: Build OH Current
+    # typical duration is ~15min, set twice the amount as limit (default is 6h)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Set up Cache
+        uses: actions/cache@v4
+        with:
+          key: k448
+          path: |
+            ~/.m2/repository
+            !~/.m2/repository/org/openhab
+            !~/.m2/repository/org/apache/karaf
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '21'
+      - name: Distro 
+        run: |
+          gh repo clone holgerfriedrich/openhab-distro
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Distro 
+        run: |
+          cd openhab-distro
+          git checkout k448 
+          mvn install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Upload Core
+        uses: actions/upload-artifact@v4
+        with:
+          name: openhab-core
+          path: openhab-distro/distributions/openhab/target/*.zip
+          retention-days: 5
+      - name: Upload Addons
+        uses: actions/upload-artifact@v4
+        with:
+          name: openhab-addons
+          path: openhab-distro/distributions/openhab-addons/target/*.kar
+          retention-days: 5
+      - name: Status 
+        run: |
+          cd openhab-core
+          git status
+          git diff
+          cd ..
+          cd openhab-webui
+          git status
+          git diff
+          cd ..
+          cd openhab-addons
+          git status
+          git diff
+          cd ..
+          cd openhab-distro
+          git status
+          git diff
