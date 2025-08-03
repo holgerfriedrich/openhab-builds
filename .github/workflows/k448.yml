@@ -6,6 +6,12 @@ on:
       - '.github/workflows/k448.yml'
   pull_request:
   workflow_dispatch:
+    inputs:
+      test:
+        description: 'Enable OH tests'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   build-all:
@@ -44,45 +50,69 @@ jobs:
       - name: Core
         run: |
           gh repo clone holgerfriedrich/openhab-core
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build Core 
-        run: |
           cd openhab-core
           git checkout k448
           git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Core
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-core
           ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Build & Test Core
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-core
+          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
       - name: Webui 
         run: |
           gh repo clone holgerfriedrich/openhab-webui
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build Webui
-        run: |
           cd openhab-webui
           git checkout k448
           git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Webui
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-webui
+          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Build & Test Webui
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-webui
           ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Addons
         run: |
           gh repo clone holgerfriedrich/openhab-addons
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build Addons
-        run: |
           cd openhab-addons
           git checkout k448
           git branch -v
-          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
-      - name: Distro 
-        run: |
-          gh repo clone holgerfriedrich/openhab-distro
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build Distro 
+      - name: Build Addons
+        if: ${{ github.event.inputs.test != 'true' }}
         run: |
+          cd openhab-addons
+          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Distro 
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          gh repo clone holgerfriedrich/openhab-distro
           cd openhab-distro
           git checkout k448
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Distro
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-distro
+          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Build & Test Distro
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-distro
           ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Upload Core
         uses: actions/upload-artifact@v4
@@ -96,7 +126,7 @@ jobs:
           name: openhab-addons-b${{ github.run_number }}
           path: openhab-distro/distributions/openhab-addons/target/*.kar
           retention-days: 5
-      - name: Status 
+      - name: Show Resover Status 
         run: |
           cd openhab-core
           git branch -v
