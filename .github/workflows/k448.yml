@@ -49,7 +49,7 @@ jobs:
       - name: Build Core 
         run: |
           cd openhab-core
-          git checkout k448 
+          git checkout k448
           git branch -v
           ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Webui 
@@ -60,7 +60,7 @@ jobs:
       - name: Build Webui
         run: |
           cd openhab-webui
-          git checkout k448 
+          git checkout k448
           git branch -v
           ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Addons
@@ -71,7 +71,7 @@ jobs:
       - name: Build Addons
         run: |
           cd openhab-addons
-          git checkout k448 
+          git checkout k448
           git branch -v
           ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Distro 
@@ -82,12 +82,12 @@ jobs:
       - name: Build Distro 
         run: |
           cd openhab-distro
-          git checkout k448 
+          git checkout k448
           ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Upload Core
         uses: actions/upload-artifact@v4
         with:
-            name: openhab-core-b${{ github.run_number }}
+          name: openhab-core-b${{ github.run_number }}
           path: openhab-distro/distributions/openhab/target/*.zip
           retention-days: 5
       - name: Upload Addons
