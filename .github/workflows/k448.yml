@@ -29,14 +29,16 @@ jobs:
         run: |
           gh repo clone apache/karaf
           cd karaf
-          git checkout 77426d226d18dbcb74fe40723cad4bd193424489
-          gh pr diff 1983 | git apply
+          # use tag if available
+          git checkout karaf-4.4.8
+          # workaround if tag is not available:
+          # git checkout 77426d226d18dbcb74fe40723cad4bd193424489
+          # gh pr diff 1983 | git apply
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Karaf
         run: |
           cd karaf
-          # git checkout karaf-4.4.8
           mvn install -DskipTests -B -ntp
       - name: Core
         run: |
