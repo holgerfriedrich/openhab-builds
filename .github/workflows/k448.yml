@@ -34,6 +34,7 @@ jobs:
           # workaround if tag is not available:
           # git checkout 77426d226d18dbcb74fe40723cad4bd193424489
           # gh pr diff 1983 | git apply
+          git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Karaf
@@ -49,6 +50,7 @@ jobs:
         run: |
           cd openhab-core
           git checkout k448 
+          git branch -v
           ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Webui 
         run: |
@@ -59,6 +61,7 @@ jobs:
         run: |
           cd openhab-webui
           git checkout k448 
+          git branch -v
           ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Addons
         run: |
@@ -69,6 +72,7 @@ jobs:
         run: |
           cd openhab-addons
           git checkout k448 
+          git branch -v
           ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Distro 
         run: |
@@ -83,29 +87,33 @@ jobs:
       - name: Upload Core
         uses: actions/upload-artifact@v4
         with:
-          name: openhab-core
+            name: openhab-core-b${{ github.run_number }}
           path: openhab-distro/distributions/openhab/target/*.zip
           retention-days: 5
       - name: Upload Addons
         uses: actions/upload-artifact@v4
         with:
-          name: openhab-addons
+          name: openhab-addons-b${{ github.run_number }}
           path: openhab-distro/distributions/openhab-addons/target/*.kar
           retention-days: 5
       - name: Status 
         run: |
           cd openhab-core
+          git branch -v
           git status
           git diff
           cd ..
           cd openhab-webui
+          git branch -v
           git status
           git diff
           cd ..
           cd openhab-addons
+          git branch -v
           git status
           git diff
           cd ..
           cd openhab-distro
+          git branch -v
           git status
           git diff
