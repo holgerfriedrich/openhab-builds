@@ -32,7 +32,6 @@ jobs:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '11'
       - name: SAT
-        if: false
         run: |
           gh repo clone openhab/static-code-analysis
           mvn install
