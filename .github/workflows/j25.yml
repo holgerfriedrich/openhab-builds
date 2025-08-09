@@ -1,0 +1,91 @@
+name: Build OH w J25
+
+on:
+  push:
+    paths:
+      - '.github/workflows/j25.yml'
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      test:
+        description: 'Enable OH tests'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build-all:
+    name: Build OH w J25
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Set up Cache
+        uses: actions/cache@v4
+        with:
+          key: j25
+          path: |
+            ~/.m2/repository
+            !~/.m2/repository/org/openhab
+            !~/.m2/repository/org/apache/karaf
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '25-ea'
+      - name: Distro
+        if: false
+        run: |
+          gh repo clone openhab/openhab-distro
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Core
+        run: |
+          gh repo clone holgerfriedrich/openhab-core
+          cd openhab-core
+          git checkout pr-j25
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Core
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-core
+          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Build & Test Core
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-core
+          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+      - name: Build Distro
+        if: false 
+        run: |
+          cd openhab-distro
+          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Upload Core
+        uses: actions/upload-artifact@v4
+        with:
+          name: openhab-core
+          path: openhab-distro/distributions/openhab/target/*.zip
+          retention-days: 5
+      - name: Upload Addons
+        if: false
+        uses: actions/upload-artifact@v4
+        with:
+          name: openhab-addons
+          path: openhab-distro/distributions/openhab-addons/target/*.kar
+          retention-days: 5
+      - name: Status 
+        run: |
+          cd openhab-core
+          git status
+          git diff
+          # cd ..
+          # cd openhab-webui
+          # git status
+          # git diff
+          # cd ..
+          # cd openhab-addons
+          # git status
+          # git diff
+          # cd ..
+          # cd openhab-distro
+          # git status
+          # git diff
