@@ -26,6 +26,19 @@ jobs:
             ~/.m2/repository
             !~/.m2/repository/org/openhab
             !~/.m2/repository/org/apache/karaf
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '11'
+      - name: SAT
+        if: false
+        run: |
+          gh repo clone openhab/static-code-analysis
+          mvn install
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
