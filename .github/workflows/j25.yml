@@ -35,14 +35,14 @@ jobs:
         run: |
           gh repo clone openhab/static-code-analysis
           cd static-code-analysis
-          mvn install
+          mvn install -Dspotless.check.skip -DskipTests -DskipChecks
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '25-ea'
+          java-version: '21'
 
       - name: BND
         run: |
@@ -52,6 +52,11 @@ jobs:
           ./mvnw install
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '25-ea'
 
       - name: Distro
         if: false
