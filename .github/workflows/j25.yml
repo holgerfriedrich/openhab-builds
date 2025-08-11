@@ -43,6 +43,16 @@ jobs:
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '25-ea'
+
+      - name: BND
+        run: |
+          gh repo clone bndtools/bnd
+          cd bnd
+          ./gradlew :build
+          ./mvnw install
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Distro
         if: false
         run: |
