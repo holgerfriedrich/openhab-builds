@@ -48,7 +48,7 @@ jobs:
         run: |
           gh repo clone bndtools/bnd
           cd bnd
-          ./gradlew :build -x testrun -x resolve
+          ./gradlew :build -x bndtools.core.test:test
           echo "---------------------------------------------"
           ./mvnw install -DskipTests -DskipChecks
         env:
