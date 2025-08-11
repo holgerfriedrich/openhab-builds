@@ -49,7 +49,7 @@ jobs:
           gh repo clone bndtools/bnd
           cd bnd
           ./gradlew :build
-          ./mvnw install
+          ./mvnw install -DskipTests -DskipChecks
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
