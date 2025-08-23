@@ -1,0 +1,88 @@
+name: Build hivemq
+
+on:
+  push:
+    paths:
+      - '.github/workflows/hivemq.yml'
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      test:
+        description: 'Enable OH tests'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build-all:
+    name: Build hivemq
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Set up Cache
+        uses: actions/cache@v4
+        with:
+          key: hivemq
+          path: |
+            ~/.m2/repository
+            !~/.m2/repository/org/openhab
+            !~/.m2/repository/org/apache/karaf
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '21'
+
+      - name: Core
+        run: |
+          gh repo clone holgerfriedrich/openhab-core
+          cd openhab-core
+          git checkout pr-netty
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Core
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-core
+          # -Dmaven=4.0.0-rc-4
+          ./mvnw install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Build & Test Core
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-core
+          ./mvnw install -T3 -DwithResolver -B -ntp
+      - name: Addons
+        run: |
+          gh repo clone holgerfriedrich/openhab-addons
+          cd openhab-addons
+          git checkout pr-hivemq
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Addons
+        if: true
+        run: |
+          cd openhab-addons
+          ./mvnw install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Test Addons
+        if: true
+        run: |
+          cd openhab-addons/itests
+          ../mvnw verify
+      - name: Status 
+        run: |
+          cd openhab-core
+          git status
+          git diff
+          # cd ..
+          # cd openhab-webui
+          # git status
+          # git diff
+          # cd ..
+          # cd openhab-addons
+          # git status
+          # git diff
+          # cd ..
+          # cd openhab-distro
+          # git status
+          # git diff
