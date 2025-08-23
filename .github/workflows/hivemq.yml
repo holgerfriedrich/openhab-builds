@@ -36,7 +36,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-core
           cd openhab-core
-          git checkout pr-netty
+          git checkout pr-netty-for-137
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -55,28 +55,34 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-addons
           cd openhab-addons
-          git checkout pr-hivemq
+          git checkout pr-netty-for-137
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Addons
         if: true
         run: |
-          cd openhab-addons/bundles/org.openhab.binding.mqtt
-          ../../mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
-          cd -
-          cd openhab-addons/bundles/org.openhab.binding.mqtt.generic
-          ../../mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
-          cd -
-          cd openhab-addons/bundles/org.openhab.binding.mqtt.homie
-          ../../mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
+          cd openhab-addons
+          ./mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
+          #cd -
+          #cd openhab-addons/bundles/org.openhab.binding.mqtt
+          #../../mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
+          #cd -
+          #cd openhab-addons/bundles/org.openhab.binding.mqtt.generic
+          #../../mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
+          #cd -
+          #cd openhab-addons/bundles/org.openhab.binding.mqtt.homie
+          #../../mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
       - name: Test Addons
         if: true
         run: |
-          cd openhab-addons/itests/org.openhab.binding.mqtt.homie.tests
-          ../../mvnw compile -DwithResolver -Dspotless.check.skip -B -ntp
+          cd openhab-addons
           git diff
-          ../../mvnw verify -Dspotless.check.skip -B -ntp
+          cd itests
+          ../mvnw verify -Dspotless.check.skip -B -ntp
+          #cd openhab-addons/itests/org.openhab.binding.mqtt.homie.tests
+          #../../mvnw compile -DwithResolver -Dspotless.check.skip -B -ntp
+          #../../mvnw verify -Dspotless.check.skip -B -ntp
       - name: Status 
         run: |
           cd openhab-core
