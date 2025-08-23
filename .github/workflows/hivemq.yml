@@ -62,13 +62,21 @@ jobs:
       - name: Build Addons
         if: true
         run: |
-          cd openhab-addons
-          ./mvnw install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          cd openhab-addons/bundles/org.openhab.binding.mqtt
+          ../../mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
+          cd -
+          cd openhab-addons/bundles/org.openhab.binding.mqtt.generic
+          ../../mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
+          cd -
+          cd openhab-addons/bundles/org.openhab.binding.mqtt.homie
+          ../../mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
       - name: Test Addons
         if: true
         run: |
-          cd openhab-addons/itests
-          ../mvnw verify
+          cd openhab-addons/itests/org.openhab.binding.mqtt.homie.tests
+          ../../mvnw compile -DwithResolver -Dspotless.check.skip -B -ntp
+          git diff
+          ../../mvnw verify -Dspotless.check.skip -B -ntp
       - name: Status 
         run: |
           cd openhab-core
