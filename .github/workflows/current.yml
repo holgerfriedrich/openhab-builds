@@ -38,6 +38,12 @@ jobs:
           cd jmdns
           git checkout pr-noee
           git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: jmdns build
+        run: |
+          cd jmdns
           mvn install -DskipTests -B -ntp
 
       - name: Core
