@@ -37,6 +37,7 @@ jobs:
           gh repo clone openhab/openhab-core
           cd openhab-core
           git revert 02804f8f8e3ba65055662d923f1f908e7202c79d --no-commit
+          git revert 7d8aca474be9bd26b31af6497f76a80a359957ed --no-commit
           git status
           git branch -v
         env:
