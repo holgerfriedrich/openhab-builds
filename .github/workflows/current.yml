@@ -34,10 +34,8 @@ jobs:
 
       - name: jmdns
         run: |
-          gh repo clone holgerfriedrich/jmdns
+          gh repo clone jmdns/jmdns
           cd jmdns
-          git checkout pr-noee
-          sed -i "s/2-SNAPSHOT/1/" pom.xml
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,7 +49,8 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-core
           cd openhab-core
-          git checkout pr-xtend-fix-lsp
+          # git checkout pr-xtend-fix-lsp
+          git checkout pr-noee
           #git revert 3d0ec786d0cf5ebc5e95d452658af62474a936ed --no-commit
           #git revert 264c5284feff93a246e522372d144ec4e77a2e67 --no-commit
           #git revert c8ce7daa2b436387d1966342aad95a15ec742690 --no-commit
