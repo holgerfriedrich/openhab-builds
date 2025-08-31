@@ -34,9 +34,9 @@ jobs:
 
       - name: Core
         run: |
-          gh repo clone holgerfriedrich/openhab-core
+          gh repo clone openhab/openhab-core
           cd openhab-core
-          # git checkout k448
+          git checkout 02804f8f8e3ba65055662d923f1f908e7202c79d
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
