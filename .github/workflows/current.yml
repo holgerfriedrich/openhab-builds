@@ -36,7 +36,7 @@ jobs:
         run: |
           gh repo clone openhab/openhab-core
           cd openhab-core
-          git checkout 478a7deb6383055681277d5ade25cac3b011d505
+          git revert 02804f8f8e3ba65055662d923f1f908e7202c79d --no-edit
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
