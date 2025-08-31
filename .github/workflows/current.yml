@@ -36,6 +36,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/jmdns
           cd jmdns
+          sed -i "s/2-SNAPSHOT/1/" pom.xml
           git checkout pr-noee
           git branch -v
         env:
