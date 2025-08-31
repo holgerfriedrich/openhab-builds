@@ -51,43 +51,43 @@ jobs:
           cd openhab-core
           ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
 
-      - name: Webui
-        run: |
-          gh repo clone openhab/openhab-webui
-          cd openhab-webui
-          # git checkout k448
-          git branch -v
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build Webui
-        if: ${{ github.event.inputs.test != 'true' }}
-        run: |
-          cd openhab-webui
-          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
-      - name: Build & Test Webui
-        if: ${{ github.event.inputs.test == 'true' }}
-        run: |
-          cd openhab-webui
-          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+#      - name: Webui
+#        run: |
+#          gh repo clone openhab/openhab-webui
+#          cd openhab-webui
+#          # git checkout k448
+#          git branch -v
+#        env:
+#          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Build Webui
+#        if: ${{ github.event.inputs.test != 'true' }}
+#        run: |
+#          cd openhab-webui
+#          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+#      - name: Build & Test Webui
+#        if: ${{ github.event.inputs.test == 'true' }}
+#        run: |
+#          cd openhab-webui
+#          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
 
-      - name: Addons
-        run: |
-          gh repo clone holgerfriedrich/openhab-addons
-          cd openhab-addons
-          git checkout pr-mdns
-          git branch -v
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build Addons
-        if: ${{ github.event.inputs.test != 'true' }}
-        run: |
-          cd openhab-addons
-          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
-      - name: Build & Test Addons
-        if: ${{ github.event.inputs.test == 'true' }}
-        run: |
-          cd openhab-addons
-          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+#      - name: Addons
+#        run: |
+#          gh repo clone openhab/openhab-addons
+#          cd openhab-addons
+#          # git checkout pr-mdns
+#          git branch -v
+#        env:
+#          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Build Addons
+#        if: ${{ github.event.inputs.test != 'true' }}
+#        run: |
+#          cd openhab-addons
+#          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+#      - name: Build & Test Addons
+#        if: ${{ github.event.inputs.test == 'true' }}
+#        run: |
+#          cd openhab-addons
+#          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
 
       - name: Distro 
         run: |
