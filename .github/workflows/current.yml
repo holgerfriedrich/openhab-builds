@@ -4,60 +4,141 @@ on:
   push:
     paths:
       - '.github/workflows/current.yml'
+  pull_request:
   workflow_dispatch:
+    inputs:
+      test:
+        description: 'Enable OH tests'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   build-all:
-    name: Build OH Current
+    name: Build OH
+    # typical duration is ~15min, set twice the amount as limit (default is 6h)
     runs-on: ubuntu-24.04
     steps:
       - name: Set up Cache
         uses: actions/cache@v4
         with:
-          key: k448
+          key: main
           path: |
             ~/.m2/repository
             !~/.m2/repository/org/openhab
             !~/.m2/repository/org/apache/karaf
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
-      - name: Distro 
+
+      - name: Core
         run: |
-          gh repo clone openhab/openhab-distro
+          gh repo clone holgerfriedrich/openhab-core
+          cd openhab-core
+          # git checkout k448
+          git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build Distro 
+      - name: Build Core
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-core
+          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Build & Test Core
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-core
+          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+
+      - name: Webui
+        run: |
+          gh repo clone openhab/openhab-webui
+          cd openhab-webui
+          # git checkout k448
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Webui
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-webui
+          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Build & Test Webui
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-webui
+          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+
+      - name: Addons
+        run: |
+          gh repo clone holgerfriedrich/openhab-addons
+          cd openhab-addons
+          git checkout pr-mdns
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Addons
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-addons
+          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Build & Test Addons
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-addons
+          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+
+      - name: Distro 
+        run: |
+          gh repo clone holgerfriedrich/openhab-distro
+          cd openhab-distro
+          git checkout pr-uom
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Distro
+        if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-distro
           ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Build & Test Distro
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-distro
+          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+          
       - name: Upload Core
         uses: actions/upload-artifact@v4
         with:
-          name: openhab-core
+          name: openhab-core-b${{ github.run_number }}
           path: openhab-distro/distributions/openhab/target/*.zip
           retention-days: 5
       - name: Upload Addons
         uses: actions/upload-artifact@v4
         with:
-          name: openhab-addons
+          name: openhab-addons-b${{ github.run_number }}
           path: openhab-distro/distributions/openhab-addons/target/*.kar
           retention-days: 5
-      - name: Status 
+
+      - name: Show Resover Status
         run: |
-          # cd openhab-core
-          # git status
-          # git diff
-          # cd ..
-          # cd openhab-webui
-          # git status
-          # git diff
-          # cd ..
-          # cd openhab-addons
-          # git status
-          # git diff
-          # cd ..
+          cd openhab-core
+          git branch -v
+          git status
+          git diff
+          cd ..
+          cd openhab-webui
+          git branch -v
+          git status
+          git diff
+          cd ..
+          cd openhab-addons
+          git branch -v
+          git status
+          git diff
+          cd ..
           cd openhab-distro
+          git branch -v
           git status
           git diff
