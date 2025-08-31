@@ -91,9 +91,9 @@ jobs:
 
       - name: Distro 
         run: |
-          gh repo clone holgerfriedrich/openhab-distro
+          gh repo clone openhab/openhab-distro
           cd openhab-distro
-          git checkout pr-uom
+          # git checkout pr-uom
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
