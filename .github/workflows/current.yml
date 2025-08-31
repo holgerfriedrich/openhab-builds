@@ -114,12 +114,12 @@ jobs:
           name: openhab-core-b${{ github.run_number }}
           path: openhab-distro/distributions/openhab/target/*.zip
           retention-days: 5
-      - name: Upload Addons
-        uses: actions/upload-artifact@v4
-        with:
-          name: openhab-addons-b${{ github.run_number }}
-          path: openhab-distro/distributions/openhab-addons/target/*.kar
-          retention-days: 5
+#      - name: Upload Addons
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: openhab-addons-b${{ github.run_number }}
+#          path: openhab-distro/distributions/openhab-addons/target/*.kar
+#          retention-days: 5
 
       - name: Show Resover Status
         run: |
