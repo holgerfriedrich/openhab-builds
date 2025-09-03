@@ -3,7 +3,7 @@ name: Build hivemq
 on:
   push:
     paths:
-      - '.github/workflows/hivemq.yml'
+      - '.github/workflows/hivemq .yml'
   pull_request:
   workflow_dispatch:
     inputs:
@@ -15,7 +15,8 @@ on:
 
 jobs:
   build-all:
-    name: Build hivemq
+    name: Build OH
+    # typical duration is ~15min, set twice the amount as limit (default is 6h)
     runs-on: ubuntu-24.04
     steps:
       - name: Set up Cache
@@ -26,17 +27,28 @@ jobs:
             ~/.m2/repository
             !~/.m2/repository/org/openhab
             !~/.m2/repository/org/apache/karaf
-
       - uses: actions/setup-java@v5
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
 
+      - name: Dagger
+        run: |
+          gh repo clone openhabiedrich/openhab-osgiify
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install Dagger
+        run: |
+          cd openhab-osgiify/com.google.dagger/
+          mvn install
+
       - name: Core
         run: |
           gh repo clone holgerfriedrich/openhab-core
           cd openhab-core
-          git checkout pr-netty-for-137
+          git checkout pr-hivemq-138
+          # git revert 7d8aca474be9bd26b31af6497f76a80a359957ed --no-commit
+          git status
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -44,59 +56,101 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-core
-          # -Dmaven=4.0.0-rc-4
-          ./mvnw install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Build & Test Core
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-core
-          ./mvnw install -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+
+      - name: Webui
+        run: |
+          gh repo clone openhab/openhab-webui
+          cd openhab-webui
+          # git checkout k448
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Webui
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-webui
+          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Build & Test Webui
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-webui
+          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+
       - name: Addons
         run: |
           gh repo clone holgerfriedrich/openhab-addons
           cd openhab-addons
-          git checkout pr-netty-for-137
+          git checkout pr-hivemq-138
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Addons
-        if: true
+        if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-addons
-          ./mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
-          #cd -
-          #cd openhab-addons/bundles/org.openhab.binding.mqtt
-          #../../mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
-          #cd -
-          #cd openhab-addons/bundles/org.openhab.binding.mqtt.generic
-          #../../mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
-          #cd -
-          #cd openhab-addons/bundles/org.openhab.binding.mqtt.homie
-          #../../mvnw install -Dspotless.check.skip -DNoskipTests -DskipChecks -T3 -DNowithResolver -B -ntp
-      - name: Test Addons
-        if: true
+          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Build & Test Addons
+        if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-addons
-          git diff
-          cd itests
-          ../mvnw verify -Dspotless.check.skip -B -ntp
-          #cd openhab-addons/itests/org.openhab.binding.mqtt.homie.tests
-          #../../mvnw compile -DwithResolver -Dspotless.check.skip -B -ntp
-          #../../mvnw verify -Dspotless.check.skip -B -ntp
-      - name: Status 
+          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+
+      - name: Distro 
+        run: |
+          gh repo clone openhab/openhab-distro
+          cd openhab-distro
+          # git checkout pr-uom
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Distro
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-distro
+          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Build & Test Distro
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-distro
+          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+          
+      - name: Upload Core
+        uses: actions/upload-artifact@v4
+        with:
+          name: openhab-core-b${{ github.run_number }}
+          path: openhab-distro/distributions/openhab/target/*.zip
+          retention-days: 5
+      - name: Upload Addons
+        uses: actions/upload-artifact@v4
+        with:
+          name: openhab-addons-b${{ github.run_number }}
+          path: openhab-distro/distributions/openhab-addons/target/*.kar
+          retention-days: 5
+
+      - name: Show Resover Status
         run: |
           cd openhab-core
+          git branch -v
           git status
           git diff
-          # cd ..
-          # cd openhab-webui
-          # git status
-          # git diff
-          # cd ..
-          # cd openhab-addons
-          # git status
-          # git diff
-          # cd ..
-          # cd openhab-distro
-          # git status
-          # git diff
+          cd ..
+          cd openhab-distro
+          git branch -v
+          git status
+          git diff
+          cd ..
+          cd openhab-webui
+          git branch -v
+          git status
+          git diff
+          cd ..
+          cd openhab-addons
+          git branch -v
+          git status
+          git diff
