@@ -99,6 +99,8 @@ jobs:
         run: |
           cd openhab-addons
           ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          cd itests
+          ../mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Build & Test Addons
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
