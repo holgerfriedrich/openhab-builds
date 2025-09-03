@@ -3,7 +3,7 @@ name: Build hivemq
 on:
   push:
     paths:
-      - '.github/workflows/hivemq .yml'
+      - '.github/workflows/hivemq.yml'
   pull_request:
   workflow_dispatch:
     inputs:
@@ -34,7 +34,7 @@ jobs:
 
       - name: Dagger
         run: |
-          gh repo clone openhabiedrich/openhab-osgiify
+          gh repo clone holgerfriedrich/openhab-osgiify
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install Dagger
