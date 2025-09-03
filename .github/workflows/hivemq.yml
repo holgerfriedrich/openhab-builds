@@ -35,6 +35,10 @@ jobs:
       - name: Dagger
         run: |
           gh repo clone holgerfriedrich/openhab-osgiify
+          cd openhab-osgiify
+          git checkout pr-dagger
+          git status
+          git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install Dagger
