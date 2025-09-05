@@ -50,7 +50,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-core
           cd openhab-core
-          git checkout pr-hivemq-138
+          git checkout pr-hivemq-139
           # git revert 7d8aca474be9bd26b31af6497f76a80a359957ed --no-commit
           git status
           git branch -v
@@ -90,7 +90,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-addons
           cd openhab-addons
-          git checkout pr-hivemq-138
+          git checkout pr-hivemq-139
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
