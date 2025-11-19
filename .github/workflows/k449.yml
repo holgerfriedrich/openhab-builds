@@ -32,7 +32,7 @@ jobs:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
       - name: Karaf
-        if: false
+        if: true 
         run: |
           gh repo clone apache/karaf
           cd karaf
@@ -45,7 +45,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Karaf
-        if: false
+        if: true 
         run: |
           cd karaf
           mvn install -DskipTests -B -ntp
