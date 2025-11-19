@@ -1,9 +1,9 @@
-name: Build Karaf 4.4.8 
+name: Build Karaf 4.4.9 
 
 on:
   push:
     paths:
-      - '.github/workflows/k448.yml'
+      - '.github/workflows/k449.yml'
   pull_request:
   workflow_dispatch:
     inputs:
@@ -22,7 +22,7 @@ jobs:
       - name: Set up Cache
         uses: actions/cache@v4
         with:
-          key: k448
+          key: k449
           path: |
             ~/.m2/repository
             !~/.m2/repository/org/openhab
@@ -37,7 +37,7 @@ jobs:
           gh repo clone apache/karaf
           cd karaf
           # use tag if available
-          git checkout karaf-4.4.8
+          git checkout karaf-4.4.x
           # workaround if tag is not available:
           # git checkout 77426d226d18dbcb74fe40723cad4bd193424489
           # gh pr diff 1983 | git apply
@@ -53,7 +53,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-core
           cd openhab-core
-          git checkout k448
+          git checkout k449
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -71,7 +71,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-webui
           cd openhab-webui
-          git checkout k448
+          git checkout k449
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -89,7 +89,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-addons
           cd openhab-addons
-          git checkout k448
+          git checkout k449
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -107,7 +107,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-distro
           cd openhab-distro
-          git checkout k448
+          git checkout k449
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Distro
