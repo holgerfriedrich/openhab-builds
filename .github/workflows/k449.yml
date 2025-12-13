@@ -37,7 +37,8 @@ jobs:
           gh repo clone apache/karaf
           cd karaf
           # use tag if available
-          git checkout karaf-4.4.x
+          git checkout karaf-4.4.9
+          # git checkout karaf-4.4.x
           # workaround if tag is not available:
           # git checkout 77426d226d18dbcb74fe40723cad4bd193424489
           # gh pr diff 1983 | git apply
@@ -62,13 +63,13 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-core
-          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Build & Test Core
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-core
-          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Webui 
         run: |
@@ -82,13 +83,13 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-webui
-          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Build & Test Webui
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-webui
-          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Addons
         run: |
@@ -102,13 +103,13 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-addons
-          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Build & Test Addons
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-addons
-          ./mvnw -Dmaven=4.0.0-rc-4 install -T1 -DwithResolver -B -ntp -Dsurefire.rerunFailingTestsCount=3
+          ./mvnw -Dmaven=4.0.0-rc-5 install -T1 -DwithResolver -B -ntp -Dsurefire.rerunFailingTestsCount=3
           ./mvnw clean
       - name: Distro 
         run: |
@@ -121,12 +122,12 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-distro
-          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Build & Test Distro
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-distro
-          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -T3 -DwithResolver -B -ntp
       - name: Upload Core
         uses: actions/upload-artifact@v4
         with:
