@@ -46,7 +46,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Karaf
-        if: true 
+        if: false
         run: |
           cd karaf
           mvn install -DskipTests -B -ntp
