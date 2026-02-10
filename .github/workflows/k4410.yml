@@ -37,8 +37,8 @@ jobs:
           gh repo clone apache/karaf
           cd karaf
           # use tag if available
-          # git checkout karaf-4.4.10
-          git checkout karaf-4.4.x
+          git checkout karaf-4.4.10
+          # git checkout karaf-4.4.x
           # workaround if tag is not available:
           # git checkout 77426d226d18dbcb74fe40723cad4bd193424489
           # gh pr diff 1983 | git apply
@@ -55,7 +55,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-core
           cd openhab-core
-          git checkout k4410
+          git checkout k44A
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -75,7 +75,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-webui
           cd openhab-webui
-          git checkout k4410
+          git checkout k44A
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -95,7 +95,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-addons
           cd openhab-addons
-          git checkout k4410
+          git checkout k44A
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -115,7 +115,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-distro
           cd openhab-distro
-          git checkout k4410
+          git checkout k44A
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Distro
