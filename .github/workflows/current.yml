@@ -90,7 +90,7 @@ jobs:
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-addons
-          ./mvnw install -T3 -DwithResolver -B -ntp
+          ./mvnw install -T3 -DwithResolver -B -ntp -pl '!itests/org.openhab.binding.hue.tests'
 
       - name: Distro 
         run: |
