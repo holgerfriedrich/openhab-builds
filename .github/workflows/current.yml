@@ -90,6 +90,8 @@ jobs:
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-addons
+          # Exclude hue binding tests due to Mockito ClassNotFoundException with ByteBuddy/OSGi
+          # See: https://github.com/holgerfriedrich/openhab-builds/actions/runs/21898346151
           ./mvnw install -T3 -DwithResolver -B -ntp -pl '!itests/org.openhab.binding.hue.tests'
 
       - name: Distro 
