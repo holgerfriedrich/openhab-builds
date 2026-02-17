@@ -55,7 +55,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-core
           cd openhab-core
-          git checkout k44A
+          # git checkout k44A
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -115,7 +115,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-distro
           cd openhab-distro
-          git checkout k44A
+          # git checkout k44A
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Distro
