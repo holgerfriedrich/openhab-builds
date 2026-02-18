@@ -127,13 +127,13 @@ jobs:
           ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
           
       - name: Upload Core
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: openhab-core-b${{ github.run_number }}
           path: openhab-distro/distributions/openhab/target/*.zip
           retention-days: 5
       - name: Upload Addons
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: openhab-addons-b${{ github.run_number }}
           path: openhab-distro/distributions/openhab-addons/target/*.kar
