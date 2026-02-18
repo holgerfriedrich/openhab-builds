@@ -53,7 +53,8 @@ jobs:
           mvn clean
       - name: Core
         run: |
-          gh repo clone holgerfriedrich/openhab-core
+          # gh repo clone holgerfriedrich/openhab-core
+          gh repo clone openhab/openhab-core
           cd openhab-core
           # git checkout k44A
           git branch -v
@@ -113,7 +114,8 @@ jobs:
           ./mvnw clean
       - name: Distro 
         run: |
-          gh repo clone holgerfriedrich/openhab-distro
+          # gh repo clone holgerfriedrich/openhab-distro
+          gh repo clone openhab/openhab-distro
           cd openhab-distro
           # git checkout k44A
         env:
