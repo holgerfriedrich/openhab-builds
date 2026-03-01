@@ -90,15 +90,17 @@ jobs:
           cd openhab-distro
           ./mvnw install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Upload Core
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
+          archive: false
           name: openhab-core
           path: openhab-distro/distributions/openhab/target/*.zip
           retention-days: 5
       - name: Upload Addons
         if: false
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
+          archive: false
           name: openhab-addons
           path: openhab-distro/distributions/openhab-addons/target/*.kar
           retention-days: 5
