@@ -43,12 +43,12 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-core
-          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Build & Test Core
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-core
-          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -T3 -DwithResolver -B -ntp
       - name: Webui 
         run: |
           gh repo clone openhab/openhab-webui
@@ -61,12 +61,12 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-webui
-          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Build & Test Webui
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-webui
-          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -T3 -DwithResolver -B -ntp
       - name: Addons
         run: |
           gh repo clone holgerfriedrich/openhab-addons
@@ -79,12 +79,12 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-addons
-          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Build & Test Addons
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-addons
-          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -T3 -DwithResolver -B -ntp
       - name: Distro 
         run: |
           gh repo clone openhab/openhab-distro
@@ -96,12 +96,12 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-distro
-          ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Build & Test Distro
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-distro
-          ./mvnw -Dmaven=4.0.0-rc-4 install -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -T3 -DwithResolver -B -ntp
       - name: Upload Core
         uses: actions/upload-artifact@v7
         with:

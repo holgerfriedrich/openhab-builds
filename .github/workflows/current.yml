@@ -46,7 +46,7 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-core
-          # ./mvnw -Dmaven=4.0.0-rc-4 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          # ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
           ./mvnw install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Build & Test Core
         if: ${{ github.event.inputs.test == 'true' }}

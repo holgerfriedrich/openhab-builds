@@ -30,18 +30,6 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '11'
-      - name: SAT
-        run: |
-          gh repo clone openhab/static-code-analysis
-          cd static-code-analysis
-          mvn install -Dspotless.check.skip -DskipTests -DskipChecks
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
 
       - name: BND
@@ -57,7 +45,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '25-ea'
+          java-version: '25'
 
       - name: Distro
         if: false
@@ -77,7 +65,7 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-core
-          # -Dmaven=4.0.0-rc-4
+          # -Dmaven=4.0.0-rc-5
           ./mvnw install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Build & Test Core
         if: ${{ github.event.inputs.test == 'true' }}
