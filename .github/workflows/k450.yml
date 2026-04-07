@@ -42,7 +42,7 @@ jobs:
       - name: Build openhab-util
         run: |
           cd openhab-util/pax-web-patch
-          mvn install -DskipTests -B -ntp
+          mvn install -DskipTests -B -ntp -Dgpg.skip=true
           mvn clean
       - name: jupnp 
         run: |
