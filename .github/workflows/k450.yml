@@ -31,6 +31,19 @@ jobs:
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
+      - name: openhab-util
+        run: |
+          gh repo clone holgerfriedrich/openhab-util
+          cd openhab-util
+          gh pr checkout 1
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build openhab-util
+        run: |
+          cd openhab-util/pax-web-patch
+          mvn install -DskipTests -B -ntp
+          mvn clean
       - name: jupnp 
         run: |
           gh repo clone holgerfriedrich/jupnp
