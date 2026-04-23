@@ -115,8 +115,8 @@ jobs:
           ./mvnw clean
       - name: Distro 
         run: |
-          # gh repo clone holgerfriedrich/openhab-distro
-          gh repo clone openhab/openhab-distro
+          gh repo clone holgerfriedrich/openhab-distro
+          # gh repo clone openhab/openhab-distro
           cd openhab-distro
           git checkout k44B
           git branch -v
