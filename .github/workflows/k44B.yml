@@ -138,7 +138,7 @@ jobs:
         run: |
           cd openhab-distro/launch/app/
           ../../mvnw -Dmaven=4.0.0-rc-5 install -DwithResolver -B -ntp
-       - name: Upload Core
+      - name: Upload Core
         uses: actions/upload-artifact@v7
         with:
           archive: false
