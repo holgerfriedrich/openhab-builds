@@ -38,7 +38,7 @@ jobs:
           cd karaf
           # use tag if available
           # git checkout refs/tags/karaf-4.4.11
-          git checkout karaf-4.4.11
+          git checkout origin/karaf-4.4.11
           # 4.4.11-SNAPSHOT -> 4.4.11
           git cherry-pick 5cbb1bff31c2f11556f5f84d0437465b38978bfd
           # git checkout karaf-4.4.x
