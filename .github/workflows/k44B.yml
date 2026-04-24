@@ -37,8 +37,10 @@ jobs:
           gh repo clone apache/karaf
           cd karaf
           # use tag if available
-          git checkout refs/tags/karaf-4.4.11
-          # git checkout karaf-4.4.11
+          # git checkout refs/tags/karaf-4.4.11
+          git checkout karaf-4.4.11
+          # 4.4.11-SNAPSHOT -> 4.4.11
+          git cherry-pick 5cbb1bff31c2f11556f5f84d0437465b38978bfd
           # git checkout karaf-4.4.x
           # workaround if tag is not available:
           # git checkout 77426d226d18dbcb74fe40723cad4bd193424489
@@ -132,7 +134,11 @@ jobs:
         run: |
           cd openhab-distro
           ./mvnw -Dmaven=4.0.0-rc-5 install -T3 -DwithResolver -B -ntp
-      - name: Upload Core
+      - name: Resolve App
+        run: |
+          cd openhab-distro/launch/app/
+          ../../mvnw -Dmaven=4.0.0-rc-5 install -DwithResolver -B -ntp
+       - name: Upload Core
         uses: actions/upload-artifact@v7
         with:
           archive: false
