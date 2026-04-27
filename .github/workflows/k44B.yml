@@ -37,17 +37,18 @@ jobs:
           gh repo clone apache/karaf
           cd karaf
           # use tag if available
-          # git checkout refs/tags/karaf-4.4.11
-          git checkout karaf-4.4.x
+          git checkout tags/karaf-4.4.11
+          # git checkout karaf-4.4.x
           # 4.4.11-SNAPSHOT -> 4.4.11
-          find . -name "pom.xml" -exec sed -i "s/4\.4\.11-SNAPSHOT/4.4.11/g" {} \;
-          sed -i "s/2\.7\.0/2.7.1/g" pom.xml
-          git diff pom.xml
+          # find . -name "pom.xml" -exec sed -i "s/4\.4\.11-SNAPSHOT/4.4.11/g" {} \;
+          # git diff pom.xml
           # git checkout karaf-4.4.x
           # workaround if tag is not available:
           # git checkout 77426d226d18dbcb74fe40723cad4bd193424489
           # gh pr diff 1983 | git apply
           git branch -v
+          git rev-parse --short HEAD
+          git rev-parse HEAD
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Karaf
