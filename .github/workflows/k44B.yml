@@ -41,7 +41,7 @@ jobs:
           git checkout karaf-4.4.x
           # 4.4.11-SNAPSHOT -> 4.4.11
           find . -name "pom.xml" -exec sed -i "s/4\.4\.11-SNAPSHOT/4.4.11/g" {} \;
-          sed -i "s/8\.0\.34/8.0.35/g" pom.xml
+          sed -i "s/2\.7\.0/2.7.1/g" pom.xml
           git diff pom.xml
           # git checkout karaf-4.4.x
           # workaround if tag is not available:
