@@ -31,6 +31,18 @@ jobs:
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
+      - name: paxweb
+        run: |
+          gh repo clone holgerfriedrich/org.ops4j.pax.web
+          cd org.ops4j.pax.web
+          git checkout pr-activate-httpservice
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build paxweb
+        run: |
+          cd org.ops4j.pax.web
+          mvn install -pl pax-web-api,pax-web-spi,pax-web-runtime -am -DskipTests
       - name: openhab-util
         run: |
           gh repo clone holgerfriedrich/openhab-util
