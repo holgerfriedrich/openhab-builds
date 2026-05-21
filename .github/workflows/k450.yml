@@ -194,11 +194,11 @@ jobs:
           git status
           git diff
           cd ..
-          cd openhab-addons
-          git branch -v
-          git status
-          git diff
-          cd ..
+          # cd openhab-addons
+          # git branch -v
+          # git status
+          # git diff
+          # cd ..
           cd openhab-distro
           git branch -v
           git status
