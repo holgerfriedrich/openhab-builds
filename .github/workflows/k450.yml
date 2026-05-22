@@ -129,7 +129,6 @@ jobs:
           ./mvnw -Dmaven=4.0.0-rc-5 install -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Addons
-        if: false 
         run: |
           gh repo clone holgerfriedrich/openhab-addons
           cd openhab-addons
@@ -138,13 +137,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Addons
-        if: ${{ false && github.event.inputs.test != 'true' }}
+        if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-addons
           ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Build & Test Addons
-        if: ${{ false && github.event.inputs.test == 'true' }}
+        if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-addons
           ./mvnw -Dmaven=4.0.0-rc-5 install -T1 -DwithResolver -B -ntp -Dsurefire.rerunFailingTestsCount=3
@@ -194,11 +193,11 @@ jobs:
           git status
           git diff
           cd ..
-          # cd openhab-addons
-          # git branch -v
-          # git status
-          # git diff
-          # cd ..
+          cd openhab-addons
+          git branch -v
+          git status
+          git diff
+          cd ..
           cd openhab-distro
           git branch -v
           git status
