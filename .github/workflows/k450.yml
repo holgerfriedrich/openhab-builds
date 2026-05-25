@@ -128,6 +128,32 @@ jobs:
           cd openhab-webui
           ./mvnw -Dmaven=4.0.0-rc-5 install -T3 -DwithResolver -B -ntp
           ./mvnw clean
+      - name: Addons zwave
+        run: |
+          gh repo clone holgerfriedrich/org.openhab.binding.zwave
+          cd org.openhab.binding.zwave
+          git checkout k450
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Addons zwave
+        run: |
+          cd org.openhab.binding.zwave
+          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw clean
+      - name: Addons zigbee
+        run: |
+          gh repo clone holgerfriedrich/org.openhab.binding.zigbee
+          cd org.openhab.binding.zigbee
+          git checkout k450
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Addons zigbee
+        run: |
+          cd org.openhab.binding.zigbee
+          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw clean
       - name: Addons
         run: |
           gh repo clone holgerfriedrich/openhab-addons
