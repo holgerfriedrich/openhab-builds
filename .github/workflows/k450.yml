@@ -171,12 +171,12 @@ jobs:
             </activeProfiles>
           </settings>
           SETTINGS
-          echo '-s .mvn/settings.xml' > org.openhab.binding.zigbee/.mvn/maven.config
+          # Removed maven.config; will add -s .mvn/settings.xml directly to mvnw calls
       - name: Build Addons zigbee
         run: |
           cd org.openhab.binding.zigbee
-          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
-          ./mvnw clean
+          ./mvnw -s .mvn/settings.xml -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -s .mvn/settings.xml clean
       - name: Addons
         run: |
           gh repo clone holgerfriedrich/openhab-addons
