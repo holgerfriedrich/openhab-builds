@@ -149,6 +149,29 @@ jobs:
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure Maven settings for zigbee
+        run: |
+          cat > org.openhab.binding.zigbee/.mvn/settings.xml << 'SETTINGS'
+          <settings>
+            <profiles>
+              <profile>
+                <id>openhab-repos</id>
+                <repositories>
+                  <repository>
+                    <id>openhab-artifactory-release</id>
+                    <url>https://openhab.jfrog.io/openhab/libs-release</url>
+                    <releases><enabled>true</enabled></releases>
+                    <snapshots><enabled>false</enabled></snapshots>
+                  </repository>
+                </repositories>
+              </profile>
+            </profiles>
+            <activeProfiles>
+              <activeProfile>openhab-repos</activeProfile>
+            </activeProfiles>
+          </settings>
+          SETTINGS
+          echo '-s .mvn/settings.xml' > org.openhab.binding.zigbee/.mvn/maven.config
       - name: Build Addons zigbee
         run: |
           cd org.openhab.binding.zigbee
