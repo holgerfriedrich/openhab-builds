@@ -132,7 +132,7 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/openhab-addons
           cd openhab-addons
-          # git checkout k450
+          git checkout k450
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
