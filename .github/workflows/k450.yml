@@ -137,7 +137,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install Addons Reactor
-        if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-addons
           ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -DwithResolver -B -ntp -N
