@@ -60,7 +60,8 @@ jobs:
         run: |
           gh repo clone holgerfriedrich/jupnp
           cd jupnp
-          gh pr checkout 297
+          git checkout modularize-transport
+          # gh pr checkout 297
           git branch -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
