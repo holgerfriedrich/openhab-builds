@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Set up Cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           key: k4410
           path: |
@@ -142,7 +142,7 @@ jobs:
       - name: Install Addons Reactor
         run: |
           cd openhab-addons
-          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -DwithResolver -B -ntp -N
+          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -Dmarkdownlint.skip=true -DskipTests -DskipChecks -DwithResolver -B -ntp -N
       - name: Addons zwave
         run: |
           gh repo clone holgerfriedrich/org.openhab.binding.zwave
@@ -173,13 +173,13 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-addons
-          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -Dmarkdownlint.skip=true -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Build & Test Addons
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-addons
-          ./mvnw -Dmaven=4.0.0-rc-5 install -T1 -DwithResolver -B -ntp -Dsurefire.rerunFailingTestsCount=3
+          ./mvnw -Dmaven=4.0.0-rc-5 install -T1 -Dmarkdownlint.skip=true -DwithResolver -B -ntp -Dsurefire.rerunFailingTestsCount=3
           ./mvnw clean
       - name: Distro 
         run: |

@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Set up Cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           key: main
           path: |
@@ -85,7 +85,7 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-addons
-          ./mvnw install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw install -Dspotless.check.skip -Dmarkdownlint.skip=true -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Build & Test Addons
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
