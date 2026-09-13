@@ -53,7 +53,7 @@ jobs:
           # use tag if available
           # git checkout karaf-4.4.10
           # git checkout karaf-4.4.x
-          git checkout pr-pax
+          # git checkout pr-pax
           # workaround if tag is not available:
           # git checkout 77426d226d18dbcb74fe40723cad4bd193424489
           # gh pr diff 1983 | git apply
