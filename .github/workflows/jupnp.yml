@@ -31,20 +31,20 @@ jobs:
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
-      - name: jupnp 
-        run: |
-          gh repo clone holgerfriedrich/jupnp
-          cd jupnp
-          git checkout modularize-transport
-          # gh pr checkout 297
-          git branch -v
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build jupnp
-        run: |
-          cd jupnp 
-          mvn install -DskipTests -B -ntp
-          mvn clean
+#      - name: jupnp 
+#        run: |
+#          gh repo clone holgerfriedrich/jupnp
+#          cd jupnp
+#          git checkout modularize-transport
+#          # gh pr checkout 297
+#          git branch -v
+#        env:
+#          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Build jupnp
+#        run: |
+#          cd jupnp 
+#          mvn install -DskipTests -B -ntp
+#          mvn clean
       - name: Core
         run: |
           gh repo clone holgerfriedrich/openhab-core
@@ -108,9 +108,10 @@ jobs:
           ./mvnw clean
       - name: Distro 
         run: |
-          gh repo clone openhab/openhab-distro
+          gh repo clone holgerfriedrich/openhab-distro
           # gh repo clone openhab/openhab-distro
           cd openhab-distro
+          git checkout pr-jupnp
           # git checkout k450
           git branch -v
         env:
