@@ -33,9 +33,10 @@ jobs:
           java-version: '21'
       - name: jupnp 
         run: |
-          gh repo clone holgerfriedrich/jupnp
+          gh repo clone jupnp/jupnp
+          # gh repo clone holgerfriedrich/jupnp
           cd jupnp
-          git checkout modularize-transport
+          # git checkout modularize-transport
           # gh pr checkout 297
           git branch -v
         env:
