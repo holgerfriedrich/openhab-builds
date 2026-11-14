@@ -1,0 +1,215 @@
+name: Build Karaf 4.5.0, J25
+
+on:
+  push:
+    paths:
+      - '.github/workflows/k450j25.yml'
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      test:
+        description: 'Enable OH tests'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build-all:
+    name: Build OH
+    # typical duration is ~15min, set twice the amount as limit (default is 6h)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Set up Cache
+        uses: actions/cache@v6
+        with:
+          key: k450j25
+          path: |
+            ~/.m2/repository
+            !~/.m2/repository/org/openhab
+            !~/.m2/repository/org/apache/karaf
+      - uses: actions/setup-java@v6
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '25'
+# we use M1 now, no need to compile
+#      - name: jupnp 
+#        run: |
+#          gh repo clone jupnp/jupnp
+#          # gh repo clone holgerfriedrich/jupnp
+#          cd jupnp
+#          # git checkout modularize-transport
+#          # gh pr checkout 297
+#          git branch -v
+#        env:
+#          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Build jupnp
+#        run: |
+#          cd jupnp 
+#          mvn install -DskipTests -B -ntp
+#          mvn clean
+      - name: Karaf
+        run: |
+          # gh repo clone apache/karaf
+          gh repo clone holgerfriedrich/karaf
+          cd karaf
+          # use tag if available
+          # git checkout karaf-4.4.10
+          # git checkout karaf-4.4.x
+          # git checkout pr-secmgr-removal
+          git checkout k450
+          # workaround if tag is not available:
+          # git checkout 77426d226d18dbcb74fe40723cad4bd193424489
+          # gh pr diff 1983 | git apply
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Karaf
+        run: |
+          cd karaf
+          mvn install -DjavaVersion=25 -DskipTests -B -ntp
+          mvn clean
+      - name: Core
+        run: |
+          gh repo clone holgerfriedrich/openhab-core
+          # gh repo clone openhab/openhab-core
+          cd openhab-core
+          git checkout k450
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Core
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-core
+          ./mvnw -Pj25 -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw clean
+      - name: Build & Test Core
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-core
+          ./mvnw -Pj25 -Dmaven=4.0.0-rc-7 install -T3 -DwithResolver -B -ntp
+          ./mvnw clean
+      - name: Webui 
+        run: |
+          gh repo clone holgerfriedrich/openhab-webui
+          cd openhab-webui
+          git checkout k450
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Webui
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-webui
+          ./mvnw -Pj25 -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw clean
+      - name: Build & Test Webui
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-webui
+          ./mvnw -Pj25 -Dmaven=4.0.0-rc-7 install -T3 -DwithResolver -B -ntp
+          ./mvnw clean
+      - name: Addons
+        run: |
+          gh repo clone holgerfriedrich/openhab-addons
+          cd openhab-addons
+          git checkout k450
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install Addons Reactor
+        run: |
+          cd openhab-addons
+          ./mvnw -Pj25 -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -Dmarkdownlint.skip=true -DskipTests -DskipChecks -DwithResolver -B -ntp -N
+      - name: Addons zwave
+        run: |
+          gh repo clone holgerfriedrich/org.openhab.binding.zwave
+          cd org.openhab.binding.zwave
+          git checkout k450
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Addons zwave
+        run: |
+          cd org.openhab.binding.zwave
+          ./mvnw -Pj25 -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw clean
+      - name: Addons zigbee
+        run: |
+          gh repo clone holgerfriedrich/org.openhab.binding.zigbee
+          cd org.openhab.binding.zigbee
+          git checkout k450
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Addons zigbee
+        run: |
+          cd org.openhab.binding.zigbee
+          ./mvnw -Pj25 -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw clean
+      - name: Build Addons
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-addons
+          ./mvnw -Pj25 -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -Dmarkdownlint.skip=true -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw clean
+      - name: Build & Test Addons
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-addons
+          ./mvnw -Pj25 -Dmaven=4.0.0-rc-7 install -T1 -Dmarkdownlint.skip=true -DwithResolver -B -ntp -Dsurefire.rerunFailingTestsCount=3
+          ./mvnw clean
+      - name: Distro 
+        run: |
+          gh repo clone holgerfriedrich/openhab-distro
+          # gh repo clone openhab/openhab-distro
+          cd openhab-distro
+          git checkout k450
+          git branch -v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Distro
+        if: ${{ github.event.inputs.test != 'true' }}
+        run: |
+          cd openhab-distro
+          ./mvnw -Pj25 -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+      - name: Build & Test Distro
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          cd openhab-distro
+          ./mvnw -Pj25 -Dmaven=4.0.0-rc-7 install -T3 -DwithResolver -B -ntp
+      - name: Upload Core
+        uses: actions/upload-artifact@v7
+        with:
+          archive: false
+          name: openhab-core-b${{ github.run_number }}
+          path: openhab-distro/distributions/openhab/target/*.zip
+          retention-days: 60 
+      - name: Upload Addons
+        uses: actions/upload-artifact@v7
+        with:
+          archive: false
+          name: openhab-addons-b${{ github.run_number }}
+          path: openhab-distro/distributions/openhab-addons/target/*.kar
+          retention-days: 30
+      - name: Show Resover Status 
+        run: |
+          cd openhab-core
+          git branch -v
+          git status
+          git diff
+          cd ..
+          cd openhab-webui
+          git branch -v
+          git status
+          git diff
+          cd ..
+          cd openhab-addons
+          git branch -v
+          git status
+          git diff
+          cd ..
+          cd openhab-distro
+          git branch -v
+          git status
+          git diff

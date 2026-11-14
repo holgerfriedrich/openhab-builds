@@ -22,7 +22,7 @@ jobs:
       - name: Set up Cache
         uses: actions/cache@v6
         with:
-          key: k4410
+          key: k450
           path: |
             ~/.m2/repository
             !~/.m2/repository/org/openhab
@@ -81,13 +81,13 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-core
-          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Build & Test Core
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-core
-          ./mvnw -Dmaven=4.0.0-rc-5 install -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-7 install -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Webui 
         run: |
@@ -101,13 +101,13 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-webui
-          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Build & Test Webui
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-webui
-          ./mvnw -Dmaven=4.0.0-rc-5 install -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-7 install -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Addons
         run: |
@@ -120,7 +120,7 @@ jobs:
       - name: Install Addons Reactor
         run: |
           cd openhab-addons
-          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -Dmarkdownlint.skip=true -DskipTests -DskipChecks -DwithResolver -B -ntp -N
+          ./mvnw -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -Dmarkdownlint.skip=true -DskipTests -DskipChecks -DwithResolver -B -ntp -N
       - name: Addons zwave
         run: |
           gh repo clone holgerfriedrich/org.openhab.binding.zwave
@@ -132,7 +132,7 @@ jobs:
       - name: Build Addons zwave
         run: |
           cd org.openhab.binding.zwave
-          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Addons zigbee
         run: |
@@ -145,19 +145,19 @@ jobs:
       - name: Build Addons zigbee
         run: |
           cd org.openhab.binding.zigbee
-          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Build Addons
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-addons
-          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -Dmarkdownlint.skip=true -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -Dmarkdownlint.skip=true -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
           ./mvnw clean
       - name: Build & Test Addons
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-addons
-          ./mvnw -Dmaven=4.0.0-rc-5 install -T1 -Dmarkdownlint.skip=true -DwithResolver -B -ntp -Dsurefire.rerunFailingTestsCount=3
+          ./mvnw -Dmaven=4.0.0-rc-7 install -T1 -Dmarkdownlint.skip=true -DwithResolver -B -ntp -Dsurefire.rerunFailingTestsCount=3
           ./mvnw clean
       - name: Distro 
         run: |
@@ -172,12 +172,12 @@ jobs:
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-distro
-          ./mvnw -Dmaven=4.0.0-rc-5 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
       - name: Build & Test Distro
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-distro
-          ./mvnw -Dmaven=4.0.0-rc-5 install -T3 -DwithResolver -B -ntp
+          ./mvnw -Dmaven=4.0.0-rc-7 install -T3 -DwithResolver -B -ntp
       - name: Upload Core
         uses: actions/upload-artifact@v7
         with:
