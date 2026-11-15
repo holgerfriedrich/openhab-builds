@@ -162,7 +162,7 @@ jobs:
         run: |
           cd openhab-addons
           ./mvnw -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -Dmarkdownlint.skip=true -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
-          find . -name '*.class' -exec file {} + > class_versions_addons.txt
+          # find . -name '*.class' -exec file {} + > class_versions_addons.txt
           ./mvnw clean
       - name: Build & Test Addons
         if: ${{ github.event.inputs.test == 'true' }}
