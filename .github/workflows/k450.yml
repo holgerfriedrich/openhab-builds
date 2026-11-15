@@ -22,7 +22,10 @@ jobs:
       - name: Set up Cache
         uses: actions/cache@v6
         with:
-          key: k450
+          # the repos are cloned later, so hashFiles() on their poms is not possible here;
+          # a unique key saves a fresh cache on every run, restore-keys picks the newest one
+          key: k450-${{ github.run_id }}
+          restore-keys: k450-
           path: |
             ~/.m2/repository
             !~/.m2/repository/org/openhab
@@ -67,6 +70,7 @@ jobs:
         run: |
           cd karaf
           mvn install -DskipTests -B -ntp
+          find . -name '*.class' -exec file {} + > class_versions_karaf.txt
           mvn clean
       - name: Core
         run: |
@@ -82,12 +86,14 @@ jobs:
         run: |
           cd openhab-core
           ./mvnw -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          find . -name '*.class' -exec file {} + > class_versions_core.txt
           ./mvnw clean
       - name: Build & Test Core
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-core
           ./mvnw -Dmaven=4.0.0-rc-7 install -T3 -DwithResolver -B -ntp
+          find . -name '*.class' -exec file {} + > class_versions_core.txt
           ./mvnw clean
       - name: Webui 
         run: |
@@ -102,12 +108,14 @@ jobs:
         run: |
           cd openhab-webui
           ./mvnw -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          find . -name '*.class' -exec file {} + > class_versions_webui.txt
           ./mvnw clean
       - name: Build & Test Webui
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-webui
           ./mvnw -Dmaven=4.0.0-rc-7 install -T3 -DwithResolver -B -ntp
+          find . -name '*.class' -exec file {} + > class_versions_webui.txt
           ./mvnw clean
       - name: Addons
         run: |
@@ -133,6 +141,7 @@ jobs:
         run: |
           cd org.openhab.binding.zwave
           ./mvnw -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          find . -name '*.class' -exec file {} + > class_versions_zwave.txt
           ./mvnw clean
       - name: Addons zigbee
         run: |
@@ -146,18 +155,21 @@ jobs:
         run: |
           cd org.openhab.binding.zigbee
           ./mvnw -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          find . -name '*.class' -exec file {} + > class_versions_zigbee.txt
           ./mvnw clean
       - name: Build Addons
         if: ${{ github.event.inputs.test != 'true' }}
         run: |
           cd openhab-addons
           ./mvnw -Dmaven=4.0.0-rc-7 install -Dspotless.check.skip -Dmarkdownlint.skip=true -DskipTests -DskipChecks -T3 -DwithResolver -B -ntp
+          find . -name '*.class' -exec file {} + > class_versions_addons.txt
           ./mvnw clean
       - name: Build & Test Addons
         if: ${{ github.event.inputs.test == 'true' }}
         run: |
           cd openhab-addons
           ./mvnw -Dmaven=4.0.0-rc-7 install -T1 -Dmarkdownlint.skip=true -DwithResolver -B -ntp -Dsurefire.rerunFailingTestsCount=3
+          find . -name '*.class' -exec file {} + > class_versions_addons.txt
           ./mvnw clean
       - name: Distro 
         run: |
@@ -178,8 +190,23 @@ jobs:
         run: |
           cd openhab-distro
           ./mvnw -Dmaven=4.0.0-rc-7 install -T3 -DwithResolver -B -ntp
+      - name: Upload Status Files
+        uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          if-no-files-found: warn
+          name: openhab-status-b${{ github.run_number }}
+          path: |
+            openhab-core/class_versions_*.txt
+            openhab-addons/class_versions_*.txt
+            openhab-webui/class_versions_*.txt
+            org.openhab.binding.zwave/class_versions_*.txt
+            org.openhab.binding.zigbee/class_versions_*.txt
+            karaf/class_versions_*.txt
+          retention-days: 60
       - name: Upload Core
         uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
         with:
           archive: false
           name: openhab-core-b${{ github.run_number }}
@@ -187,12 +214,14 @@ jobs:
           retention-days: 60 
       - name: Upload Addons
         uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
         with:
           archive: false
           name: openhab-addons-b${{ github.run_number }}
           path: openhab-distro/distributions/openhab-addons/target/*.kar
           retention-days: 30
       - name: Show Resover Status 
+        if: ${{ !cancelled() }}
         run: |
           cd openhab-core
           git branch -v
