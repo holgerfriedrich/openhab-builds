@@ -220,25 +220,11 @@ jobs:
           name: openhab-addons-b${{ github.run_number }}
           path: openhab-distro/distributions/openhab-addons/target/*.kar
           retention-days: 30
-      - name: Show Resover Status 
+      - name: Show Resolver Status
         if: ${{ !cancelled() }}
         run: |
-          cd openhab-core
-          git branch -v
-          git status
-          git diff
-          cd ..
-          cd openhab-webui
-          git branch -v
-          git status
-          git diff
-          cd ..
-          cd openhab-addons
-          git branch -v
-          git status
-          git diff
-          cd ..
-          cd openhab-distro
-          git branch -v
-          git status
-          git diff
+          # repos may be missing if an earlier step failed
+          for d in openhab-core openhab-webui openhab-addons openhab-distro; do
+            [ -d "$d" ] || continue
+            (cd "$d" && git branch -v && git status && git diff)
+          done
